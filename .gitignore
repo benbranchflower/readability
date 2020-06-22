@@ -1,0 +1,6 @@
+*.tsv
+*.tar
+*.bz2
+*.zip
+*.gz
+config.json
