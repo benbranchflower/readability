@@ -51,7 +51,7 @@ print(results)
 
 logit = LogisticRegression(max_iter=2000)
 logit.fit(X, y)
-
+›
 y_pred = pd.Series(logit.predict(X)).replace(inv_label_dict)
 y_true = y.replace(inv_label_dict)
 
