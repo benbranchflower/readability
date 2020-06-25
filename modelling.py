@@ -12,10 +12,11 @@ import statsmodels as sm
 import statsmodels.formula.api as smf
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
-
+from sklearn.feature_selection import SelectFromModel
 # models
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+import xgboost
 
 # metrics
 from sklearn.metrics import classification_report
@@ -72,7 +73,7 @@ report(logit, X, y)
 x_train, x_test, y_train, y_test = train_test_split(X,y, random_state=SEED,
                                                     train_size=0.8)
 
-logit = LogisticRegression(max_iter=1000, class_weight='balanced', C=2,
+logit = LogisticRegression(max_iter=1000, class_weight='balanced', C=5,
                            solver='saga', penalty='elasticnet', l1_ratio=.5,
                            random_state=SEED, n_jobs=NJOBS) 
 logit.fit(x_train, y_train)
