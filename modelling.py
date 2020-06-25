@@ -63,16 +63,16 @@ model = smf.mnlogit(f'label ~ 1 + {"+".join(df.columns[:-1])}', data)
 results = model.fit()
 print(results)
 '''
-
+'''
 # get a baseline of what we will be able to do iwth the data
 logit = LogisticRegression(max_iter=2000, random_state=SEED, n_jobs=NJOBS) # convergence is an issue with the obs to feature ratio
 logit.fit(X, y)
 
 report(logit, X, y)
-
+'''
 x_train, x_test, y_train, y_test = train_test_split(X,y, random_state=SEED,
                                                     train_size=0.8)
-
+'''
 logit = LogisticRegression(max_iter=1000, class_weight='balanced', C=5,
                            solver='saga', penalty='elasticnet', l1_ratio=.5,
                            random_state=SEED, n_jobs=NJOBS) 
@@ -84,6 +84,26 @@ logit.fit(x_train, y_train)
 print(report(logit, x_test, y_test))
 
 report(gs_obj.best_estimator_, X, y)
+'''
 
-RF = RandomForestClassifier()
+rf = RandomForestClassifier(max_features='sqrt')
+
+rf.fit(x_train,y_train)
+report(rf, x_test, y_test)
+report(rf, X, y)
+feat_select = SelectFromModel(rf, 0.001, prefit=True) 
+X_sub = feat_select.transform(X)
+print(X_sub.shape)
+x_sub_train, x_sub_test, y_train, y_test = train_test_split(X_sub,y,
+                                                            random_state=SEED,
+                                                            train_size=0.8)
+
+rf.fit(x_sub_train, y_train)
+report(rf, x_sub_test, y_test)
+report(rf, X_sub, y)
+
+xgboo
+
+
+
 
