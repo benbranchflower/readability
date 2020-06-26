@@ -16,7 +16,8 @@ from sklearn.feature_selection import SelectFromModel
 # models
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-import xgboost
+from xgboost import XGBClassifier
+from xgboost import XGBRFClassifier
 
 # metrics
 from sklearn.metrics import classification_report
@@ -102,8 +103,11 @@ rf.fit(x_sub_train, y_train)
 report(rf, x_sub_test, y_test)
 report(rf, X_sub, y)
 
-xgboo
-
+# XGBOOST Handles NaN natively so give it the raw form without filling
+xgb_params = {
+    ''
+    }
+clf = XGBClassifier(**xgb_params)
 
 
 
