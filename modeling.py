@@ -97,7 +97,10 @@ rf = RandomForestClassifier(max_features='sqrt', random_state=SEED)
 rf.fit(x_train,y_train)
 report(rf, rf.predict(x_test), y_test)
 report(rf, rf.predict(X), y)
-feat_select = SelectFromModel(rf, 0.002, prefit=True) 
+feat_select = SelectFromModel(rf, 0.002, prefit=True)
+colnames = X.columns[feat_select.get_support()]
+with open('colnames.txt', 'w') as f:
+    print('\n'.join(colnames), file=f)
 X_sub = feat_select.transform(X)
 print(X_sub.shape)
 x_sub_train, x_sub_test, y_train, y_test = train_test_split(X_sub,y,
@@ -110,7 +113,7 @@ report(rf, rf.predict(X_sub), y)
 jl.dump(rf, 'rf.joblib')
 
 fig, ax = plt.subplots(figsize=(38, 9))
-plot_tree(rf.estimators_[84], max_depth=3, feature_names=X.columns,
+plot_tree(rf.estimators_[84], max_depth=3, feature_names=colnames,
           filled=True, fontsize=12, impurity=False, proportion=True,
           class_names=labels)
 fig.savefig('tree.png')
