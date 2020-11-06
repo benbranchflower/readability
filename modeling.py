@@ -13,10 +13,12 @@ import pandas as pd
 import statsmodels as sm
 import statsmodels.formula.api as smf
 import xgboost as xgb
+from matplotlib import pyplot as plt
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedKFold
 from sklearn.feature_selection import SelectFromModel
+from sklearn.tree import plot_tree
 
 # models
 from sklearn.linear_model import LogisticRegression
@@ -107,6 +109,13 @@ report(rf, rf.predict(x_sub_test), y_test)
 report(rf, rf.predict(X_sub), y)
 jl.dump(rf, 'rf.joblib')
 
+fig, ax = plt.subplots(figsize=(38, 9))
+plot_tree(rf.estimators_[84], max_depth=3, feature_names=X.columns,
+          filled=True, fontsize=12, impurity=False, proportion=True,
+          class_names=labels)
+fig.savefig('tree.png')
+
+"""
 # XGBOOST Handles NaN natively so give it the raw form without filling
 class_weights = df.level.value_counts().min() / df.level.value_counts()
 weight_dict = {x:y for x,y in zip(class_weights.index, class_weights)}
@@ -160,6 +169,8 @@ report(clf, gs.predict(x_test), y_test)
 report(clf, gs.predict(df.drop(['filename','level'],axis=1)),df.level)
 
 jl.dump(clf, "xgb.joblib")
+"""
+
 '''
 tuning_xgb_params = {
     'max_depth':None
