@@ -50,7 +50,9 @@ def report(model, pred, y):
 
 
 ###  Data loading and processing ###
-df = pd.read_csv(infile, sep='\t', error_bad_lines=False)
+df = pd.read_csv(infile, sep='\t', error_bad_lines=False).drop('tot_seconds', axis=1)
+
+df = df.loc[:,[x for x in df.columns if x[:4] != 'num_']]
 
 # create numeric outcome label
 # df['label'] = df.filename.str.slice(7,9)
@@ -160,13 +162,14 @@ report(clf, clf.predict(df.drop(['filename','level'],axis=1)),df.level)
 with open('latest/xgb.features', 'w') as f:
     print('\n'.join(colnames), file=f)
 jl.dump(clf, 'latest/xgb.joblib')
-"""
+
 cv = StratifiedKFold(n_splits=4)
 
-grid = {'max_depth':[13,14,15,16,17],'learning_rate':[0.2,0.15,0.1,0.05],
+grid = {'max_depth':[13,14,15,16,17],'learning_rate':[0.2,0.15,0.1,0.05]}
+"""
         'gamma':np.arange(0,1,.1), 'min_child_wight':np.arange(0,1,.1),
         'max_delta_step':[1,2,3,4,5], 'subsample':np.arange(.5,1.1,.1),
-        'reg_alpha':np.arange(0,1.1,.1), 'reg_lambda':np.arange(0,1.1,.1)}
+        'reg_alpha':np.arange(0,1.1,.1), 'reg_lambda':np.arange(0,1.1,.1)}"""
 gs = GridSearchCV(clf, grid, n_jobs=NJOBS, cv=cv)
 gs.fit(x_train, y_train)
 
@@ -176,8 +179,10 @@ report(clf, gs.predict(x_train), y_train)
 report(clf, gs.predict(x_test), y_test)
 report(clf, gs.predict(df.drop(['filename','level'],axis=1)),df.level)
 
-jl.dump(clf, "xgb.joblib")
-"""
+with open('latest/xgb.features', 'w') as f:
+    print('\n'.join(colnames), file=f)
+jl.dump(clf, 'latest/xgb.joblib')
+
 
 '''
 tuning_xgb_params = {
