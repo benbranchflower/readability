@@ -99,7 +99,7 @@ report(rf, rf.predict(x_test), y_test)
 report(rf, rf.predict(X), y)
 feat_select = SelectFromModel(rf, 0.001, prefit=True)
 colnames = X.columns[feat_select.get_support()]
-with open('colnames.txt', 'w') as f:
+with open('latest/rf.features', 'w') as f:
     print('\n'.join(colnames), file=f)
 X_sub = feat_select.transform(X)
 print(X_sub.shape)
@@ -110,7 +110,8 @@ x_sub_train, x_sub_test, y_train, y_test = train_test_split(X_sub,y,
 rf.fit(x_sub_train, y_train)
 report(rf, rf.predict(x_sub_test), y_test)
 report(rf, rf.predict(X_sub), y)
-jl.dump(rf, 'rf.joblib')
+jl.dump(rf, 'latest/rf.joblib')
+
 
 fig, ax = plt.subplots(figsize=(38, 9))
 plot_tree(rf.estimators_[84], max_depth=3, feature_names=colnames,
@@ -118,7 +119,7 @@ plot_tree(rf.estimators_[84], max_depth=3, feature_names=colnames,
           class_names=labels)
 fig.savefig('tree.png')
 
-"""
+
 # XGBOOST Handles NaN natively so give it the raw form without filling
 class_weights = df.level.value_counts().min() / df.level.value_counts()
 weight_dict = {x:y for x,y in zip(class_weights.index, class_weights)}
@@ -156,6 +157,10 @@ report(clf, clf.predict(x_train), y_train)
 report(clf, clf.predict(x_test), y_test)
 report(clf, clf.predict(df.drop(['filename','level'],axis=1)),df.level)
 
+with open('latest/xgb.features', 'w') as f:
+    print('\n'.join(colnames), file=f)
+jl.dump(clf, 'latest/xgb.joblib')
+"""
 cv = StratifiedKFold(n_splits=4)
 
 grid = {'max_depth':[13,14,15,16,17],'learning_rate':[0.2,0.15,0.1,0.05],
