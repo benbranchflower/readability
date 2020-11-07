@@ -97,7 +97,7 @@ rf = RandomForestClassifier(max_features='sqrt', random_state=SEED)
 rf.fit(x_train,y_train)
 report(rf, rf.predict(x_test), y_test)
 report(rf, rf.predict(X), y)
-feat_select = SelectFromModel(rf, 0.002, prefit=True)
+feat_select = SelectFromModel(rf, 0.001, prefit=True)
 colnames = X.columns[feat_select.get_support()]
 with open('colnames.txt', 'w') as f:
     print('\n'.join(colnames), file=f)
