@@ -162,14 +162,14 @@ report(clf, clf.predict(df.drop(['filename','level'],axis=1)),df.level)
 with open('latest/xgb.features', 'w') as f:
     print('\n'.join(colnames), file=f)
 jl.dump(clf, 'latest/xgb.joblib')
-
+"""
 cv = StratifiedKFold(n_splits=4)
 
 grid = {'max_depth':[13,14,15,16,17],'learning_rate':[0.2,0.15,0.1,0.05]}
-"""
+
         'gamma':np.arange(0,1,.1), 'min_child_wight':np.arange(0,1,.1),
         'max_delta_step':[1,2,3,4,5], 'subsample':np.arange(.5,1.1,.1),
-        'reg_alpha':np.arange(0,1.1,.1), 'reg_lambda':np.arange(0,1.1,.1)}"""
+        'reg_alpha':np.arange(0,1.1,.1), 'reg_lambda':np.arange(0,1.1,.1)}
 gs = GridSearchCV(clf, grid, n_jobs=NJOBS, cv=cv)
 gs.fit(x_train, y_train)
 
@@ -182,7 +182,7 @@ report(clf, gs.predict(df.drop(['filename','level'],axis=1)),df.level)
 with open('latest/xgb.features', 'w') as f:
     print('\n'.join(colnames), file=f)
 jl.dump(clf, 'latest/xgb.joblib')
-
+"""
 
 '''
 tuning_xgb_params = {
